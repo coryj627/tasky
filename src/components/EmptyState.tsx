@@ -43,12 +43,15 @@ export function EmptyState({ filter, hasCategories }: EmptyStateProps) {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
       className="flex flex-col items-center justify-center py-12 text-center"
+      role="status"
+      aria-live="polite"
     >
       <motion.div
         initial={{ scale: 0.8 }}
         animate={{ scale: 1 }}
         transition={{ delay: 0.1, duration: 0.2 }}
         className="mb-4"
+        aria-hidden="true"
       >
         {content.icon}
       </motion.div>

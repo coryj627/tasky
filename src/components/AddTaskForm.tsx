@@ -47,8 +47,11 @@ export function AddTaskForm({ categories, onAddTask }: AddTaskFormProps) {
     >
       <Card>
         <CardContent className="p-4">
-          <form onSubmit={handleSubmit} onBlur={handleBlur}>
+          <form onSubmit={handleSubmit} onBlur={handleBlur} aria-label="Add new task form">
             <div className="flex gap-2">
+              <label htmlFor="new-task" className="sr-only">
+                Task title
+              </label>
               <Input
                 id="new-task"
                 type="text"
@@ -57,10 +60,11 @@ export function AddTaskForm({ categories, onAddTask }: AddTaskFormProps) {
                 onChange={(e) => setTitle(e.target.value)}
                 onFocus={handleFocus}
                 className="flex-1"
+                aria-label="Enter new task title"
               />
               
-              <Button type="submit" disabled={!title.trim()}>
-                <Plus size={16} />
+              <Button type="submit" disabled={!title.trim()} aria-label="Add new task">
+                <Plus size={16} aria-hidden="true" />
                 Add
               </Button>
             </div>
@@ -75,8 +79,11 @@ export function AddTaskForm({ categories, onAddTask }: AddTaskFormProps) {
               className="overflow-hidden"
             >
               <div className="pt-3">
+                <label htmlFor="category-select" className="sr-only">
+                  Select task category (optional)
+                </label>
                 <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-                  <SelectTrigger className="w-full">
+                  <SelectTrigger className="w-full" id="category-select" aria-label="Select task category">
                     <SelectValue placeholder="Select a category (optional)" />
                   </SelectTrigger>
                   <SelectContent>
@@ -86,6 +93,7 @@ export function AddTaskForm({ categories, onAddTask }: AddTaskFormProps) {
                           <div
                             className="w-3 h-3 rounded-full border"
                             style={{ backgroundColor: category.color }}
+                            aria-hidden="true"
                           />
                           {category.name}
                         </div>

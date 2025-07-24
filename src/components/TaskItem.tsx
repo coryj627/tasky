@@ -57,10 +57,11 @@ export function TaskItem({ task, categories, onToggle, onDelete, onEdit }: TaskI
       )}>
         <CardContent className="flex items-center gap-3 p-4">
           <Checkbox
-            id={task.id}
+            id={`task-${task.id}`}
             checked={task.completed}
             onCheckedChange={() => onToggle(task.id)}
             className="shrink-0"
+            aria-label={`Mark task "${task.title}" as ${task.completed ? 'incomplete' : 'complete'}`}
           />
           
           <div className="flex-1 min-w-0">
@@ -73,6 +74,7 @@ export function TaskItem({ task, categories, onToggle, onDelete, onEdit }: TaskI
                 onKeyDown={handleKeyPress}
                 className="w-full bg-transparent border-none outline-none text-foreground font-medium"
                 autoFocus
+                aria-label="Edit task title"
               />
             ) : (
               <div
@@ -81,6 +83,15 @@ export function TaskItem({ task, categories, onToggle, onDelete, onEdit }: TaskI
                   task.completed && "line-through text-muted-foreground"
                 )}
                 onClick={() => setIsEditing(true)}
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault()
+                    setIsEditing(true)
+                  }
+                }}
+                aria-label={`Task: ${task.title}. Press Enter to edit.`}
               >
                 {task.title}
               </div>
@@ -94,7 +105,13 @@ export function TaskItem({ task, categories, onToggle, onDelete, onEdit }: TaskI
                   backgroundColor: `color-mix(in oklch, ${category.color} 15%, transparent)`,
                   borderColor: category.color
                 }}
+                aria-label={`Category: ${category.name}`}
               >
+                <div
+                  className="w-2 h-2 rounded-full mr-1"
+                  style={{ backgroundColor: category.color }}
+                  aria-hidden="true"
+                />
                 {category.name}
               </Badge>
             )}
@@ -114,16 +131,18 @@ export function TaskItem({ task, categories, onToggle, onDelete, onEdit }: TaskI
                   size="sm"
                   onClick={() => setIsEditing(true)}
                   className="h-8 w-8 p-0 text-muted-foreground hover:text-foreground"
+                  aria-label={`Edit task: ${task.title}`}
                 >
-                  <Edit3 size={14} />
+                  <Edit3 size={14} aria-hidden="true" />
                 </Button>
                 <Button
                   variant="ghost"
                   size="sm"
                   onClick={() => onDelete(task.id)}
                   className="h-8 w-8 p-0 text-muted-foreground hover:text-destructive"
+                  aria-label={`Delete task: ${task.title}`}
                 >
-                  <Trash2 size={14} />
+                  <Trash2 size={14} aria-hidden="true" />
                 </Button>
               </motion.div>
             )}

@@ -58,8 +58,8 @@ export function CategoryFilter({
         <h2 className="text-lg font-semibold text-foreground">Filter Tasks</h2>
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogTrigger asChild>
-            <Button variant="outline" size="sm">
-              <Settings size={16} />
+            <Button variant="outline" size="sm" aria-label="Open category management dialog">
+              <Settings size={16} aria-hidden="true" />
               Manage Categories
             </Button>
           </DialogTrigger>
@@ -72,16 +72,19 @@ export function CategoryFilter({
                 <h3 className="font-medium">Add New Category</h3>
                 <div className="flex gap-2">
                   <Input
+                    id="new-category-name"
                     placeholder="Category name"
                     value={newCategoryName}
                     onChange={(e) => setNewCategoryName(e.target.value)}
                     onKeyDown={(e) => e.key === 'Enter' && handleAddCategory()}
+                    aria-label="Enter new category name"
                   />
                   <Select value={newCategoryColor} onValueChange={setNewCategoryColor}>
-                    <SelectTrigger className="w-20">
+                    <SelectTrigger className="w-20" aria-label="Select category color">
                       <div
                         className="w-4 h-4 rounded-full border"
                         style={{ backgroundColor: newCategoryColor }}
+                        aria-hidden="true"
                       />
                     </SelectTrigger>
                     <SelectContent>
@@ -90,13 +93,14 @@ export function CategoryFilter({
                           <div
                             className="w-4 h-4 rounded-full border"
                             style={{ backgroundColor: color }}
+                            aria-hidden="true"
                           />
                         </SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
-                  <Button onClick={handleAddCategory} disabled={!newCategoryName.trim()}>
-                    <Plus size={16} />
+                  <Button onClick={handleAddCategory} disabled={!newCategoryName.trim()} aria-label="Add new category">
+                    <Plus size={16} aria-hidden="true" />
                   </Button>
                 </div>
               </div>
@@ -110,6 +114,7 @@ export function CategoryFilter({
                         <div
                           className="w-3 h-3 rounded-full border"
                           style={{ backgroundColor: category.color }}
+                          aria-hidden="true"
                         />
                         <span>{category.name}</span>
                       </div>
@@ -118,8 +123,9 @@ export function CategoryFilter({
                         size="sm"
                         onClick={() => onDeleteCategory(category.id)}
                         className="h-6 w-6 p-0 text-muted-foreground hover:text-destructive"
+                        aria-label={`Delete category: ${category.name}`}
                       >
-                        <X size={12} />
+                        <X size={12} aria-hidden="true" />
                       </Button>
                     </div>
                   ))}
@@ -130,16 +136,26 @@ export function CategoryFilter({
         </Dialog>
       </div>
 
-      <div className="flex flex-wrap gap-2">
+      <div className="flex flex-wrap gap-2" role="group" aria-label="Task filter options">
         {/* Default filters */}
         <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
           <Badge
             variant={activeFilter === 'all' ? 'default' : 'secondary'}
             className={cn(
-              "cursor-pointer transition-colors",
+              "cursor-pointer transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
               activeFilter === 'all' && "bg-primary text-primary-foreground"
             )}
             onClick={() => onFilterChange('all')}
+            role="button"
+            tabIndex={0}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault()
+                onFilterChange('all')
+              }
+            }}
+            aria-label={`Show all tasks (${getFilterCount('all')} tasks)`}
+            aria-pressed={activeFilter === 'all'}
           >
             All ({getFilterCount('all')})
           </Badge>
@@ -149,10 +165,20 @@ export function CategoryFilter({
           <Badge
             variant={activeFilter === 'active' ? 'default' : 'secondary'}
             className={cn(
-              "cursor-pointer transition-colors",
+              "cursor-pointer transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
               activeFilter === 'active' && "bg-primary text-primary-foreground"
             )}
             onClick={() => onFilterChange('active')}
+            role="button"
+            tabIndex={0}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault()
+                onFilterChange('active')
+              }
+            }}
+            aria-label={`Show active tasks (${getFilterCount('active')} tasks)`}
+            aria-pressed={activeFilter === 'active'}
           >
             Active ({getFilterCount('active')})
           </Badge>
@@ -162,10 +188,20 @@ export function CategoryFilter({
           <Badge
             variant={activeFilter === 'completed' ? 'default' : 'secondary'}
             className={cn(
-              "cursor-pointer transition-colors",
+              "cursor-pointer transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
               activeFilter === 'completed' && "bg-primary text-primary-foreground"
             )}
             onClick={() => onFilterChange('completed')}
+            role="button"
+            tabIndex={0}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault()
+                onFilterChange('completed')
+              }
+            }}
+            aria-label={`Show completed tasks (${getFilterCount('completed')} tasks)`}
+            aria-pressed={activeFilter === 'completed'}
           >
             Completed ({getFilterCount('completed')})
           </Badge>
@@ -177,7 +213,7 @@ export function CategoryFilter({
             <Badge
               variant={activeFilter === category.id ? 'default' : 'secondary'}
               className={cn(
-                "cursor-pointer transition-colors",
+                "cursor-pointer transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
                 activeFilter === category.id && "text-white"
               )}
               style={{
@@ -185,6 +221,16 @@ export function CategoryFilter({
                 borderColor: category.color
               }}
               onClick={() => onFilterChange(category.id)}
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault()
+                  onFilterChange(category.id)
+                }
+              }}
+              aria-label={`Show ${category.name} tasks (${getFilterCount(category.id)} tasks)`}
+              aria-pressed={activeFilter === category.id}
             >
               {category.name} ({getFilterCount(category.id)})
             </Badge>

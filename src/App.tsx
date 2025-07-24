@@ -120,12 +120,21 @@ function App() {
 
   return (
     <div className="min-h-screen bg-background">
+      {/* Skip link for keyboard navigation */}
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 bg-primary text-primary-foreground px-4 py-2 rounded-md"
+      >
+        Skip to main content
+      </a>
+      
       <div className="container mx-auto px-4 py-8 max-w-4xl">
         <motion.header
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3 }}
           className="text-center mb-8"
+          role="banner"
         >
           <h1 className="text-3xl font-bold text-foreground mb-2">TaskFlow</h1>
           <p className="text-muted-foreground">Organize your day, one task at a time</p>
@@ -154,7 +163,7 @@ function App() {
           />
         </motion.div>
 
-        <div className="space-y-6">
+        <div id="main-content" className="space-y-6" role="main" aria-label="Task list">
           {filteredTasks.length === 0 ? (
             <EmptyState filter={activeFilter} hasCategories={categories.length > 0} />
           ) : (
@@ -165,9 +174,10 @@ function App() {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ duration: 0.3, delay: 0.3 }}
+                  aria-labelledby={activeFilter === 'all' ? 'active-tasks-heading' : undefined}
                 >
                   {activeFilter === 'all' && (
-                    <h2 className="text-lg font-semibold text-foreground mb-4">
+                    <h2 id="active-tasks-heading" className="text-lg font-semibold text-foreground mb-4">
                       Active Tasks ({activeTasks.length})
                     </h2>
                   )}
@@ -199,9 +209,10 @@ function App() {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ duration: 0.3, delay: 0.4 }}
+                  aria-labelledby={activeFilter === 'all' ? 'completed-tasks-heading' : undefined}
                 >
                   {activeFilter === 'all' && (
-                    <h2 className="text-lg font-semibold text-muted-foreground mb-4">
+                    <h2 id="completed-tasks-heading" className="text-lg font-semibold text-muted-foreground mb-4">
                       Completed Tasks ({completedTasks.length})
                     </h2>
                   )}
